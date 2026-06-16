@@ -31,6 +31,14 @@ data "aws_subnets" "public" {
     name   = "vpc-id"
     values = [data.aws_vpc.default.id]
   }
+filter {
+    name   = "availability-zone"
+    values = [
+      "us-east-1a",
+      "us-east-1b",
+      "us-east-1c"
+    ]
+  }
 }
 #cluster provision
 resource "aws_eks_cluster" "example" {
@@ -90,7 +98,7 @@ resource "aws_eks_node_group" "example" {
     max_size     = 2
     min_size     = 1
   }
-  instance_types = ["t2.medium"]
+  instance_types = ["t3.medium"]
 
   # Ensure that IAM Role permissions are created before and deleted after EKS Node Group handling.
   # Otherwise, EKS will not be able to properly delete EC2 Instances and Elastic Network Interfaces.
